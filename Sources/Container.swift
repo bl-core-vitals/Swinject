@@ -76,7 +76,7 @@ public final class Container {
     public func resetObjectScope(_ objectScope: ObjectScopeProtocol) {
         services.values
             .filter { $0.objectScope === objectScope }
-            .forEach { $0.storage.instance = nil }
+            .forEach { $0.storage?.instance = nil }
 
         parent?.resetObjectScope(objectScope)
     }
@@ -254,7 +254,7 @@ extension Container: _Resolver {
 
     fileprivate func graphResolutionCompleted() {
         for value in services.values {
-            value.storage.graphResolutionCompleted()
+            value.storage?.graphResolutionCompleted()
         }
         currentObjectGraph = nil
     }
@@ -313,7 +313,7 @@ extension Container: Resolver {
             // An instance for the key might be added by the factory invocation.
             return persistedInstance
         }
-        entry.storage.setInstance(resolvedInstance as Any, inGraph: currentObjectGraph)
+        entry.storage?.setInstance(resolvedInstance as Any, inGraph: currentObjectGraph)
 
         if let completed = entry.initCompleted as? (Resolver, Any) -> Void,
             let resolvedInstance = resolvedInstance as? Service {
@@ -326,7 +326,7 @@ extension Container: Resolver {
     private func persistedInstance<Service>(
         _: Service.Type, from entry: ServiceEntryProtocol, in graph: GraphIdentifier
     ) -> Service? {
-        if let instance = entry.storage.instance(inGraph: graph), let service = instance as? Service {
+        if let instance = entry.storage?.instance(inGraph: graph), let service = instance as? Service {
             return service
         } else {
             return nil
