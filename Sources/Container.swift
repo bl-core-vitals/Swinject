@@ -253,7 +253,9 @@ extension Container: _Resolver {
     }
 
     fileprivate func graphResolutionCompleted() {
-        services.values.forEach { $0.storage.graphResolutionCompleted() }
+        for value in services.values {
+            value.storage.graphResolutionCompleted()
+        }
         currentObjectGraph = nil
     }
 }
